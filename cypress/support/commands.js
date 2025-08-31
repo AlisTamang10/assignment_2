@@ -1,25 +1,22 @@
-// ***********************************************
-// This example commands.js shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+
+
+Cypress.Commands.add('loginAndSaveCookie', () => {
+  cy.visit('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login');
+  cy.get('input[name="username"]').type('Admin'); 
+  cy.get('input[name="password"]').type('admin123'); 
+  cy.get('button[type="submit"]').click();
+
+  cy.url().should('not.include', '/auth/login');
+
+  cy.getCookie('orangehrm').then(cookie => {
+    expect(cookie).to.exist;
+    cy.writeFile('cypress/fixtures/cookie.json', cookie).then(() => {
+      
+      cy.readFile('cypress/fixtures/cookie.json').then(savedCookie => {
+        expect(savedCookie).to.have.property('name', 'orangehrm');
+        expect(savedCookie).to.have.property('value', cookie.value);
+      });
+    });
+  });
+});

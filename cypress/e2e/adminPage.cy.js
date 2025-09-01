@@ -3,16 +3,15 @@ const adminPage = new AdminPage();
 
 describe('Admin Page - Search Non-existent User', () => {
   beforeEach(() => {
-    cy.visit('/web/index.php/auth/login');      // Start from login page
-    cy.restoreSessionFromCookies();             // Restore cookies
-    cy.reload();                                // Activate session
-    cy.url().should('include', '/dashboard');   // Confirm session is valid
+    cy.session('admin-session', () => {
+      cy.loginViaUI();
+    });
+
+    cy.visit('/web/index.php/dashboard/index'); 
+    adminPage.clickAdminMenu();                 
   });
 
-  it.only('should navigate to Admin via UI and search for a non-existent user', () => {
-    cy.contains('Admin').click();               // Click Admin from sidebar
-    cy.url().should('include', '/admin/viewSystemUsers'); // Confirm Admin page
-
+  it('should show "No Records Found" when searching for a non-existent user', () => {
     adminPage.searchUser('test124');
     adminPage.assertNoRecordsFound();
   });

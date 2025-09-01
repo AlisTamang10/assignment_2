@@ -1,0 +1,8 @@
+{
+  "firstName": "John",
+  "middleName": "A",
+  "lastName": "Doe",
+  "email": "johndoe@example.com",
+  "contactNumber": "9800000000",
+  "resumePath": "resume.pdf"
+}
